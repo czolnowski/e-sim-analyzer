@@ -33,6 +33,8 @@ abstract class AbstractFetcher
      */
     public function getCrawlerInstance($url)
     {
+        usleep(mt_rand(500000, 2000000));
+
         return new Crawler(
             $this->client->get($url)->getBody()->getContents()
         );
