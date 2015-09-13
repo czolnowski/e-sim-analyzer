@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="app.configuration.fetcher.products"
+                 class="AppBundle\Configuration\FetcherConfiguration">
+            <call method="setAmountOfColumns">
+                <argument type="string">5</argument>
+            </call>
+            <call method="setFirstColumnLabel">
+                <argument type="string">Product</argument>
+            </call>
+        </service>
+
+        <service id="app.fetcher.product_offers"
+                 class="AppBundle\Fetcher\ProductMarketFetcher">
+            <argument type="service" id="app.e_sim.client" />
+            <argument type="service" id="app.configuration.fetcher.products" />
+        </service>
+
+        <service id="app.elastic_search.client.products"
+                 class="AppBundle\ElasticSearch\Client"
+                 parent="app.elastic_search.client.abstract">
+            <argument type="string">products</argument>
+        </service>
+
+        <service id="app.creator.product_offer"
+                 class="AppBundle\Creator\ProductOfferCreator">
+            <factory service="app.creator.factory"
+                     method="createProductOffer" />
+            <argument type="service" id="app.recognizer.trader" />
+            <argument type="service" id="app.recognizer.product" />
+        </service>
+
+        <service id="app.service.collection_populate.product_offers"
+                class="AppBundle\Service\CollectionPopulate">
+            <argument type="service" id="app.elastic_search.client.products" />
+            <argument type="service" id="jms_serializer" />
+        </service>
+    </services>
+</container>

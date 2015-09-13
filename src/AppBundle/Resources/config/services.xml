@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="app.e_sim.client"
+                class="AppBundle\ESim\Client">
+            <argument type="string">%e_sim_host%</argument>
+        </service>
+
+        <service id="app.recognizer.trader"
+                class="AppBundle\Recognizer\TraderRecognizer"/>
+
+        <service id="app.recognizer.product"
+                 class="AppBundle\Recognizer\ProductRecognizer"/>
+
+        <service id="app.recognizer.company"
+                 class="AppBundle\Recognizer\CompanyRecognizer"/>
+
+        <service id="app.fetcher.currencies"
+                 class="AppBundle\Fetcher\CurrenciesFetcher">
+            <argument type="service" id="app.e_sim.client" />
+        </service>
+
+        <service id="app.fetcher.countries"
+                 class="AppBundle\Fetcher\CountriesFetcher">
+            <argument type="service" id="app.e_sim.client" />
+        </service>
+
+        <service id="app.elastic_search.client.abstract"
+                abstract="true">
+            <argument type="string">%es_host%</argument>
+            <argument type="string">%es_port%</argument>
+            <argument type="string">%es_index%</argument>
+        </service>
+
+        <service id="app.creator.factory"
+                 class="AppBundle\Creator\CreatorsFactory" />
+    </services>
+</container>

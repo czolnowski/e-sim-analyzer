@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="app.configuration.fetcher.jobs"
+                 class="AppBundle\Configuration\FetcherConfiguration">
+            <call method="setAmountOfColumns">
+                <argument type="string">6</argument>
+            </call>
+            <call method="setFirstColumnLabel">
+                <argument type="string">Employer</argument>
+            </call>
+        </service>
+
+        <service id="app.fetcher.job_offers"
+                 class="AppBundle\Fetcher\JobMarketFetcher">
+            <argument type="service" id="app.e_sim.client" />
+            <argument type="service" id="app.configuration.fetcher.jobs" />
+        </service>
+
+        <service id="app.elastic_search.client.jobs"
+                 class="AppBundle\ElasticSearch\Client"
+                 parent="app.elastic_search.client.abstract">
+            <argument type="string">jobs</argument>
+        </service>
+
+        <service id="app.creator.job_offer"
+                 class="AppBundle\Creator\JobOfferCreator">
+            <factory service="app.creator.factory"
+                     method="createJobOffer" />
+            <argument type="service" id="app.recognizer.trader" />
+            <argument type="service" id="app.recognizer.product" />
+            <argument type="service" id="app.recognizer.company" />
+        </service>
+
+        <service id="app.service.collection_populate.job_offers"
+                class="AppBundle\Service\CollectionPopulate">
+            <argument type="service" id="app.elastic_search.client.jobs" />
+            <argument type="service" id="jms_serializer" />
+        </service>
+    </services>
+</container>

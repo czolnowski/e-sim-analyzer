@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="app.configuration.fetcher.monetary_market"
+                 class="AppBundle\Configuration\FetcherConfiguration">
+            <call method="setAmountOfColumns">
+                <argument type="string">4</argument>
+            </call>
+            <call method="setFirstColumnLabel">
+                <argument type="string">Seller</argument>
+            </call>
+        </service>
+
+        <service id="app.fetcher.monetary_market"
+                 class="AppBundle\Fetcher\MonetaryMarketFetcher">
+            <argument type="service" id="app.e_sim.client" />
+            <argument type="service" id="app.configuration.fetcher.monetary_market" />
+        </service>
+
+        <service id="app.elastic_search.client.currencies_ratios"
+                 class="AppBundle\ElasticSearch\Client"
+                 parent="app.elastic_search.client.abstract">
+            <argument type="string">currencies</argument>
+        </service>
+
+        <service id="app.creator.currency_ratio"
+                 class="AppBundle\Creator\CurrencyRatioCreator">
+            <factory service="app.creator.factory"
+                     method="createCurrencyRatio" />
+            <argument type="service" id="app.recognizer.trader" />
+        </service>
+
+        <service id="app.service.collection_populate.currency_ratio"
+                class="AppBundle\Service\CollectionPopulate">
+            <argument type="service" id="app.elastic_search.client.currencies_ratios" />
+            <argument type="service" id="jms_serializer" />
+        </service>
+    </services>
+</container>
