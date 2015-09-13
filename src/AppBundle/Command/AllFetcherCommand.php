@@ -14,17 +14,12 @@ class AllFetcherCommand extends ContainerAwareCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $jobOffersFetcher = new JobOffersFetcherCommand();
-        $jobOffersFetcher->setContainer($this->getContainer());
+        $jobOffersFetcher = $this->getApplication()->find('app:job-offers:fetch');
+        $monetaryMarketFetcher = $this->getApplication()->find('app:monetary-market:fetch');
+        $productMarketFetcher = $this->getApplication()->find('app:product-market:fetch');
 
-        $monetaryMarketFetcher = new MonetaryMarketFetcherCommand();
-        $monetaryMarketFetcher->setContainer($this->getContainer());
-
-        $productMarketFetcher = new ProductMarketFetcherCommand();
-        $productMarketFetcher->setContainer($this->getContainer());
-
-        $jobOffersFetcher->execute($input, $output);
-        $monetaryMarketFetcher->execute($input, $output);
-        $productMarketFetcher->execute($input, $output);
+        $jobOffersFetcher->run($input, $output);
+        $monetaryMarketFetcher->run($input, $output);
+        $productMarketFetcher->run($input, $output);
     }
 } 
