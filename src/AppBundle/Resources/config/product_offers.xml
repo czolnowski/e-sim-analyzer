@@ -5,6 +5,9 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="app.elastic_search.mapping.product_offers"
+                 class="AppBundle\ElasticSearch\Mapping\ProductOffersMapping" />
+
         <service id="app.configuration.fetcher.products"
                  class="AppBundle\Configuration\FetcherConfiguration">
             <call method="setAmountOfColumns">

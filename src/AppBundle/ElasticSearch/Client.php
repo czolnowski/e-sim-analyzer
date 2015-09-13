@@ -40,8 +40,10 @@ class Client
      */
     public function insert($body)
     {
+        $now = new \DateTime();
+
         $this->client->post(
-            sprintf('%s/%s', $this->index, $this->type),
+            sprintf('%s_%s/%s', $this->index, $now->format('Y-m-d'), $this->type),
             [
                 'body' => $body
             ]

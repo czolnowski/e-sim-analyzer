@@ -5,6 +5,9 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="app.elastic_search.mapping.currency_ratios"
+                class="AppBundle\ElasticSearch\Mapping\CurrencyRatiosMapping" />
+
         <service id="app.configuration.fetcher.monetary_market"
                  class="AppBundle\Configuration\FetcherConfiguration">
             <call method="setAmountOfColumns">
